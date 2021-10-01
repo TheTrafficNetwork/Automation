@@ -17,6 +17,7 @@ Personalized variables are stored to a .env file in the folder to reference.
 """
 
 
+# TODO Add in try/except blocks for connection/other failures
 # TODO Refactor Code
 # TODO Figure out a way to use just NAPALM without the Netmiko addon
 # TODO Revisit listing of data to add/remove new fields
