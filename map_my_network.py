@@ -12,11 +12,16 @@ information fields by crawling through the network:
     List of Neighbor adjacencies
 
 Utilizes netmiko to gather neighboring ip addresses and napalm for device
-information. Scripting assumes you have credentials to all of your devices.
-Personalized variables are stored to a .env file in the folder to reference.
+information. 
+
+Important Info
+- Scripting assumes you have credentials to all of your devices.
+- Assumtpion that L3 devices Management is Loopback0 and L2 is a SVI
+- Personalized variables are stored to a .env file in the folder to reference.
 """
 
 
+# TODO Remove the Management Interface assumption and make it more variable
 # TODO Add in try/except blocks for connection/other failures
 # TODO Refactor Code
 # TODO Figure out a way to use just NAPALM without the Netmiko addon
