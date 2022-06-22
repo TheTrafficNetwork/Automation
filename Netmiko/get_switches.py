@@ -26,7 +26,7 @@ def get_switch_list() -> list:
     nb.http_session.verify = False
     switch_list = list(
         nb.dcim.devices.filter(
-            role="lab-device", manufacturer="cisco", tag=["backup"]
+            role="lab-device", manufacturer="cisco", tag=["test"]
         )
     )
     return switch_list
