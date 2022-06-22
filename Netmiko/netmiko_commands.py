@@ -12,16 +12,16 @@ def ntp_update_commands():
 
 
 def base_update_commands():
-    commands = [
+    command_list = [
         "udld enable",
         "lldp run",
         "service timestamps debug datetime msec",
         "service timestamps log datetime msec",
         "service password-encryption",
     ]
-    return commands
+    return command_list
 
 
 def test_command():
-    commands = ["banner exec %\nTest\nTest\nTest\n%\n", "end"]
-    return commands
+    command_list = ["banner exec %\nTest\nTest\nTest\n%\n", "end"]
+    return command_list
