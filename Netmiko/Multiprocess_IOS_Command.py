@@ -16,7 +16,7 @@ load_dotenv(find_dotenv())
 
 
 # List of commands to push to network devices
-commands = netmiko_commands.show_commands()
+commands = netmiko_commands.test_command()
 
 
 def should_i_make_changes():
