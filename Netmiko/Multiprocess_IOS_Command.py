@@ -16,7 +16,7 @@ load_dotenv(find_dotenv())
 
 
 # List of commands to push to network devices
-commands = netmiko_commands.base_update_commands()
+commands = netmiko_commands.show_commands()
 
 
 def should_i_make_changes():
@@ -24,14 +24,14 @@ def should_i_make_changes():
     Let's you know if it is a good idea to make changes today.
     """
     is_it_friday = requests.get(
-        "https://isitreadonlyfriday.com/api/isitreadonlyfriday/CDT"
+        r"https://isitreadonlyfriday.com/api/isitreadonlyfriday/CDT"
     )
     if is_it_friday.json()["readonly"] is True:
         print("You really shouldn't make changes on a Friday!!!")
         sys.exit()
 
 
-def ssh_conn(device: dict, commands: list = commands) -> str:
+def ssh_config(device: dict, commands: list = commands) -> str:
     """SSH connection via Netmiko to push configuration commands to network
     devices. Saves configuration changes and logs errors in the process.
 
@@ -47,6 +47,25 @@ def ssh_conn(device: dict, commands: list = commands) -> str:
         with ConnectHandler(**device) as net_connect:
             output = net_connect.send_config_set(commands)
             output += net_connect.save_config()
+    except Exception as err:
+        failure = f"Could not connect to {device['ip']}. Exception: {err}"
+        return failure
+
+
+def ssh_show(device: dict) -> str:
+    """SSH connection via Netmiko to run a show command on a device.
+
+    Args:
+        device (dict): Connection values needed for Netmiko
+
+    Returns:
+        output (str): Result of the show command
+        failure (str): Errors encountered from the Netmiko connection process.
+    """
+    try:
+        with ConnectHandler(**device) as net_connect:
+            output = net_connect.send_command("show ip interface brief")
+            return output
     except Exception as err:
         failure = f"Could not connect to {device['ip']}. Exception: {err}"
         return failure
@@ -73,8 +92,8 @@ if __name__ == "__main__":
     with Progress() as progress:
         task_id = progress.add_task("[cyan]Working...", total=len(future_list))
         with Pool(processes=max_procs) as pool:
-            for result in pool.imap(ssh_conn, future_list):
+            for result in pool.imap(ssh_show, future_list):
                 results.append(result)
                 progress.advance(task_id)
 
-    print(*[result for result in results if result], sep="\n")
+    print(*[result for result in results if result], sep="\n\n")
